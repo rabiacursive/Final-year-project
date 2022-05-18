@@ -1,0 +1,19 @@
+.btn-primary {
+  background-color: #00b050;
+  border: #00b050;
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:focus-visible,
+.btn-primary:focus-within {
+  background-color: #404040;
+  border: #404040;
+  box-shadow: red;
+}
+
+.btn-secondary {
+  background-color: #404040;
+  border: #404040;
+}
