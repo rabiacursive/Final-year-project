@@ -115,7 +115,30 @@ function getProducts($data)
 
 function createProduct($data, $file)
 {
-    
+    global $mysqli;
+    $target_dir = "/uploads/";
+    $target_file = $target_dir . basename($file["image"]["name"]);
+    // $uploadOk = 1;
+    // $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $res = ["status" => "fail", "message" => "There was an error during Product Creation. Kindly try again..."];
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+        $title = $data->title;
+        $desc = $data->desc;
+        $status = "In Stock";
+        $category = $data->category;
+        $price = $data->price;
+        $sellerID = $_SESSION["userID"];
+
+        $query = "INSERT INTO `products`(title_en, description_en, image, status, category, price, sellerID) 
+                    VALUES ('$title', '$desc', '$target_file', '$status', '$category', '$price', $sellerID)";
+
+        if ($mysqli->query($query) === TRUE) {
+            $res = ["status" => "success", "message" => "Registration Successful..."];
+        }
+        $mysqli->close();
+    }
+
+    return json_encode($res);
 }
 
 function deleteProduct($id)

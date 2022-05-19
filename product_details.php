@@ -1,6 +1,6 @@
 
 
-<?php include 'partials/header.php'; ?>
+<?php include '/partials/header.php'; ?>
 
 <div id="wrapper">
         <div class="container">

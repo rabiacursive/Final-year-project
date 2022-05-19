@@ -41,6 +41,9 @@ function processPOST()
         case "auth":
             return authController($data);
             break;
+        case "product":
+            return productController($data);
+            break;
         default:
             return doError("Request code not known.");
             break;
@@ -52,9 +55,16 @@ function processGET()
     $data = (object) $_GET;
 
     switch ($data->reqCode) {
-
+        case "product":
+            return productController($data);
+            break;
+        case "logout":
+            unset($_SESSION);
+            session_unset();
+            header("Location: /");
+            break;
         default:
-            return doError("Request code not known.");
+            return doError("Request code not knownr.");
             break;
     }
 }
@@ -65,7 +75,9 @@ function processDELETE()
     $data = json_decode($json);
 
     switch ($data->reqCode) {
-
+        case "product":
+            return productController($data);
+            break;
         default:
             return doError("Request code not known.");
             break;
@@ -78,7 +90,9 @@ function processPUT()
     $data = json_decode($json);
 
     switch ($data->reqCode) {
-
+        case "product":
+            return productController($data);
+            break;
         default:
             return doError("Request code not known.");
             break;
@@ -108,6 +122,12 @@ function productController($data)
     switch ($data->reqType) {
         case "create":
             return createProduct($data, $_FILES);
+            break;
+        case "getAll":
+            return getProducts($data);
+            break;
+        case "get":
+            return getProduct($data->id);
             break;
         case "delete":
             return deleteProduct($data->id);
