@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
     <header class="p-3 mb-3 border-bottom">
       <div class="container">
@@ -14,18 +13,6 @@
               style="width: 100px; display: inline-block; margin: auto"
             />
           </a>
-=======
-<?php
-include_once "api/helper.php";
-if (!isset($_SESSION["userID"])) {
-  header("Location: login.php");
-}
-
-?>
-
-<!DOCTYPE html>
-<html lang="en">
->>>>>>> 8e39b1c0f976fe206fcd2360511f96cfe8b9f521
 
 <head>
   <meta charset="utf-8" />
