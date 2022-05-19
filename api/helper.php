@@ -83,7 +83,7 @@ function getTotalProducts()
 {
     global $mysqli;
     $res = $mysqli->query("SELECT count(id) as totalCount FROM  `products`");
-    $mysqli->close();
+    // $mysqli->close();
     $totalCount = $res->fetch_assoc()["totalCount"];
     return $totalCount;
 }
@@ -101,7 +101,32 @@ function getProducts($data)
     $products = [];
     $query = "SELECT * FROM  `products`";
     if (isset($category)) {
-        $query += " WHERE category = '$category'";
+        $query .= " WHERE category = '$category'";
+    }
+    $query .= " LIMIT $page_first_result, $results_per_page";
+    $result = $mysqli->query($query);
+    if ($result->num_rows > 0) {
+        $products = $result->fetch_all(MYSQLI_ASSOC);
+    }
+    $res = ["number_of_page" => $number_of_page, "products" => $products];
+    $mysqli->close();
+    return json_encode($res);
+}
+
+function getUserProducts($data)
+{
+    global $mysqli;
+    $category = $data->category;
+    $page = $data->page;
+    $results_per_page = 10;
+    $total_products = getTotalProducts();
+    $number_of_page = ceil($total_products / $results_per_page);
+    $page_first_result = ($page - 1) * $results_per_page;
+    $userID = $_SESSION['userID'];
+    $products = [];
+    $query = "SELECT * FROM  `products` WHERE sellerID = $userID";
+    if (isset($category)) {
+        $query .= " AND category = '$category'";
     }
     $query += " LIMIT $page_first_result, $results_per_page";
     $result = $mysqli->query("SELECT * FROM  `products` ORDER BY id DESC LIMIT 20");

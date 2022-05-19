@@ -5,26 +5,26 @@
     <div>
       <div class="navbar navbar-light navbar-expand">
         <ul class="nav navbar-nav mega-menu">
-          <li class="nav-item dropdown" data-category-id="1">
-            <a id="nav_main_category_1" href="product_details.php" class="nav-link dropdown-toggle nav-main-category">Goat</a>
+          <li class="nav-item dropdown">
+            <a href="#" data-category="goat" class="nav-link dropdown-toggle nav-main-category">Goat</a>
           </li>
-          <li class="nav-item dropdown" data-category-id="2">
-            <a id="nav_main_category_2" href="product_details.php" class="nav-link dropdown-toggle nav-main-category">Cattle</a>
+          <li class="nav-item dropdown">
+            <a href="#" data-category="cattle" class="nav-link dropdown-toggle nav-main-category">Cattle</a>
           </li>
-          <li class="nav-item dropdown" data-category-id="3">
-            <a id="nav_main_category_3" href="product_details.php" class="nav-link dropdown-toggle nav-main-category">Sheep</a>
+          <li class="nav-item dropdown">
+            <a href="#" data-category="sheep" class="nav-link dropdown-toggle nav-main-category">Sheep</a>
           </li>
-          <li class="nav-item dropdown" data-category-id="4">
-            <a id="nav_main_category_4" href="product_details.php" class="nav-link dropdown-toggle nav-main-category">Chicken</a>
+          <li class="nav-item dropdown">
+            <a href="#" data-category="chicken" class="nav-link dropdown-toggle nav-main-category">Chicken</a>
           </li>
-          <li class="nav-item dropdown" data-category-id="5">
-            <a id="nav_main_category_5" href="product_details.php" class="nav-link dropdown-toggle nav-main-category">Horse</a>
+          <li class="nav-item dropdown">
+            <a href="#" data-category="horse" class="nav-link dropdown-toggle nav-main-category">Horse</a>
           </li>
-          <li class="nav-item dropdown" data-category-id="6">
-            <a id="nav_main_category_6" href="https://www.beopari.pk/cat" class="nav-link dropdown-toggle nav-main-category">Cat</a>
+          <li class="nav-item dropdown">
+            <a href="#" data-category="cat" class="nav-link dropdown-toggle nav-main-category">Cat</a>
           </li>
-          <li class="nav-item dropdown" data-category-id="7">
-            <a id="nav_main_category_7" href="https://www.beopari.pk/dog" class="nav-link dropdown-toggle nav-main-category">Dog</a>
+          <li class="nav-item dropdown">
+            <a href="#" data-category="dog" class="nav-link dropdown-toggle nav-main-category">Dog</a>
           </li>
         </ul>
       </div>
@@ -40,64 +40,97 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <!-- Single Product -->
-      <div class="col-md-6 col-lg-4 col-xl-3">
-        <a href="product_details.php">
-          <div id="product-1" class="single-product">
-            <div class="part-1"></div>
-            <div class="part-2">
-              <h3 class="product-title">Kamori, Barbari, Beetal Goats</h3>
-              <h4 class="product-old-price">₨35,000</h4>
-              <h4 class="product-price">₨25,000</h4>
-            </div>
-          </div>
-        </a>
+    <div class="row" id="products">
 
-      </div>
-      <!-- Single Product -->
-      <div class="col-md-6 col-lg-4 col-xl-3">
-        <a href="product_details.php">
-          <div id="product-2" class="single-product">
-            <div class="part-1">
-              <span class="discount">15% off</span>
-            </div>
-            <div class="part-2">
-              <h3 class="product-title">Sahiwal Cow</h3>
-              <h4 class="product-old-price">₨400,000</h4>
-              <h4 class="product-price">₨340,000</h4>
-            </div>
-          </div>
-        </a>
-      </div>
-      <!-- Single Product -->
-      <div class="col-md-6 col-lg-4 col-xl-3">
-        <a href="product_details.php">
-          <div id="product-3" class="single-product">
-            <div class="part-1"></div>
-            <div class="part-2">
-              <h3 class="product-title">Twin Komodos</h3>
-              <h4 class="product-price">₨1,235,000</h4>
-            </div>
-          </div>
-        </a>
-      </div>
-      <!-- Single Product -->
-      <div class="col-md-6 col-lg-4 col-xl-3">
-        <a href="product_details.php">
-          <div id="product-4" class="single-product">
-            <div class="part-1">
-              <span class="new">CUTE</span>
-            </div>
-            <div class="part-2">
-              <h3 class="product-title">Cute Duck</h3>
-              <h4 class="product-price">₨635,000</h4>
-            </div>
-          </div>
-        </a>
-      </div>
+
     </div>
+    <nav id="pagination" class="d-flex align-items-center justify-content-center">
+
+    </nav>
   </div>
+
+
+  <script>
+    let page = 1,
+      category = null;
+
+    function fetchData(page, category = null) {
+      $.ajax({
+        async: true,
+        url: "/api/SharedController.php",
+        data: JSON.stringify({
+          page,
+          category,
+          reqCode: "product",
+          reqType: "getAll"
+        }),
+        method: "POST",
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        converters: {
+          'json': true
+        },
+        success: function(data) {
+          let products_html = data.products.map(product => `
+          <div class="col-md-6 col-lg-4 col-xl-3">
+              <a href="product_details.php?id=${product.id}">
+                <div class="single-product">
+                  <div class="part-1" style="background: url('${product.image ? product.image : '/assets/img/cows.jpg'}') no-repeat center;"></div>
+                  <div class="part-2">
+                    <h3 class="product-title">${product.title_en}</h3>
+                    ${product.old_price ? `<h4 class="product-old-price">${product.old_price}</h4>`: ''}
+                    <h4 class="product-price">${product.price}</h4>
+                  </div>
+                </div>
+              </a>
+          </div>
+          `).join("");
+          if (data.products.length == 0) {
+            products_html = "<h3 class='text-danger'>No Product Found </h3>"
+          }
+
+          if (data.number_of_page > 1) {
+            $("#pagination").html($(`
+              <ul class="list-unstyled d-flex">
+                <li><a class="btn btn-disabled" data-total="${data.number_of_page}" id="prevBtn" href="#">Previous</a></li>
+                <li><a class="btn btn-primary" data-total="${data.number_of_page}" id="nextBtn" href="#">Next</a></li>
+              </ul>
+          `))
+          }
+
+          $("#products").html($(products_html))
+        }
+      });
+    }
+    $(function() {
+      fetchData(page)
+
+      $(document).on("click", ".nav-main-category", function(e) {
+        e.preventDefault();
+        category = $(this).data("category");
+        page = 1
+        fetchData(page, category)
+      })
+
+      $(document).on("click", "#nextBtn", function(e) {
+        e.preventDefault();
+        let total = $(this).data("total");
+        if (page < total) {
+          page += 1;
+          fetchData(page, category)
+        }
+      })
+
+      $(document).on("click", "#prevBtn", function(e) {
+        e.preventDefault();
+        if (page > 1) {
+          page -= 1;
+          fetchData(page, category)
+        }
+      })
+
+    })
+  </script>
 
   <?php include 'partials/footer.php'; ?>
 

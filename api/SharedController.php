@@ -1,6 +1,5 @@
 <?php
 include_once "helper.php";
-
 $request_method = $_SERVER['REQUEST_METHOD'];
 switch ($request_method) {
 
@@ -125,6 +124,9 @@ function productController($data)
             break;
         case "getAll":
             return getProducts($data);
+            break;
+        case "getUser":
+            return getUserProducts($data);
             break;
         case "get":
             return getProduct($data->id);
