@@ -35,7 +35,7 @@ function doError(string $reason)
 function processPOST()
 {
     $json = file_get_contents('php://input');
-    $data = json_decode($json);
+    $data = !empty($_POST) ? (object) $_POST : json_decode($json);
 
     switch ($data->reqCode) {
         case "auth":
@@ -96,6 +96,21 @@ function authController($data)
             break;
         case "signup":
             return signup($data);
+            break;
+        default:
+            return doError("Request type not known.");
+            break;
+    }
+}
+
+function productController($data)
+{
+    switch ($data->reqType) {
+        case "create":
+            return createProduct($data, $_FILES);
+            break;
+        case "delete":
+            return deleteProduct($data->id);
             break;
         default:
             return doError("Request type not known.");

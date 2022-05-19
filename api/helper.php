@@ -51,9 +51,9 @@ function login($data)
 function signup($data)
 {
     global $mysqli;
-    $first_name = $data->first_name;
-    $last_name = $data->last_name;
-    $email = $data->email;
+    $first_name = ucfirst(strtolower($data->first_name));
+    $last_name = ucfirst(strtolower($data->last_name));
+    $email = strtolower($data->email);
     $phone = $data->phone;
     $password = md5($data->password);
 
@@ -62,6 +62,69 @@ function signup($data)
     $res = ["status" => "fail", "message" => "There was an error during your registration. Kindly try again..."];
     if ($mysqli->query($query) === TRUE) {
         $res = ["status" => "success", "message" => "Registration Successful..."];
+    }
+    $mysqli->close();
+    return json_encode($res);
+}
+
+function getProduct($id)
+{
+    global $mysqli;
+    $product = (object)[];
+    $res = $mysqli->query("SELECT * FROM  `products` WHERE id = $id");
+    if ($res->num_rows > 0) {
+        $product = $res->fetch_assoc();
+    }
+    $mysqli->close();
+    return json_encode($product);
+}
+
+function getTotalProducts()
+{
+    global $mysqli;
+    $res = $mysqli->query("SELECT count(id) as totalCount FROM  `products`");
+    $mysqli->close();
+    $totalCount = $res->fetch_assoc()["totalCount"];
+    return $totalCount;
+}
+
+function getProducts($data)
+{
+    global $mysqli;
+    $category = $data->category;
+    $page = $data->page;
+    $results_per_page = 10;
+    $total_products = getTotalProducts();
+    $number_of_page = ceil($total_products / $results_per_page);
+    $page_first_result = ($page - 1) * $results_per_page;
+
+    $products = [];
+    $query = "SELECT * FROM  `products`";
+    if (isset($category)) {
+        $query += " WHERE category = '$category'";
+    }
+    $query += " LIMIT $page_first_result, $results_per_page";
+    $result = $mysqli->query("SELECT * FROM  `products` ORDER BY id DESC LIMIT 20");
+    if ($result->num_rows > 0) {
+        $products = $result->fetch_all(MYSQLI_ASSOC);
+    }
+    $res = ["number_of_page" => $number_of_page, "products" => $products];
+    $mysqli->close();
+    return json_encode($res);
+}
+
+function createProduct($data, $file)
+{
+    
+}
+
+function deleteProduct($id)
+{
+    global $mysqli;
+    $query = "DELETE FROM `products` WHERE id = $id";
+    $res = ["status" => "fail", "message" => "Unable to delete product. Kindly try again..."];
+    if ($mysqli->query($query) === TRUE) {
+        $res = ["status" => "success", "message" => "Product Deleted Successful..."];
     }
     $mysqli->close();
     return json_encode($res);
