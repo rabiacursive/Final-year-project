@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include_once "helper.php";
 $request_method = $_SERVER['REQUEST_METHOD'];
 switch ($request_method) {
@@ -130,6 +134,9 @@ function productController($data)
             break;
         case "get":
             return getProduct($data->id);
+            break;
+        case "edit":
+            return editProduct($data);
             break;
         case "delete":
             return deleteProduct($data->id);

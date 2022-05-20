@@ -116,24 +116,14 @@ function getProducts($data)
 function getUserProducts($data)
 {
     global $mysqli;
-    $category = $data->category;
-    $page = $data->page;
-    $results_per_page = 10;
-    $total_products = getTotalProducts();
-    $number_of_page = ceil($total_products / $results_per_page);
-    $page_first_result = ($page - 1) * $results_per_page;
     $userID = $_SESSION['userID'];
     $products = [];
     $query = "SELECT * FROM  `products` WHERE sellerID = $userID";
-    if (isset($category)) {
-        $query .= " AND category = '$category'";
-    }
-    $query += " LIMIT $page_first_result, $results_per_page";
-    $result = $mysqli->query("SELECT * FROM  `products` ORDER BY id DESC LIMIT 20");
+    $result = $mysqli->query($query);
     if ($result->num_rows > 0) {
         $products = $result->fetch_all(MYSQLI_ASSOC);
     }
-    $res = ["number_of_page" => $number_of_page, "products" => $products];
+    $res = ["products" => $products];
     $mysqli->close();
     return json_encode($res);
 }
@@ -141,21 +131,19 @@ function getUserProducts($data)
 function createProduct($data, $file)
 {
     global $mysqli;
-    $target_dir = "/uploads/";
-    $target_file = $target_dir . basename($file["image"]["name"]);
-    // $uploadOk = 1;
-    // $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $target_dir = "../uploads/";
+    $target_file = $target_dir . time() . preg_replace("/\s+/", "", strtolower(basename($file["image"]["name"])));
     $res = ["status" => "fail", "message" => "There was an error during Product Creation. Kindly try again..."];
-    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
         $title = $data->title;
-        $desc = $data->desc;
+        $desc = $data->description;
         $status = "In Stock";
         $category = $data->category;
         $price = $data->price;
         $sellerID = $_SESSION["userID"];
 
-        $query = "INSERT INTO `products`(title_en, description_en, image, status, category, price, sellerID) 
-                    VALUES ('$title', '$desc', '$target_file', '$status', '$category', '$price', $sellerID)";
+        $query = "INSERT INTO `products`(title_en, title_pk, description_en, description_pk, image, status, category, price, sellerID) 
+                    VALUES ('$title','$title', '$desc', '$desc', '$target_file', '$status', '$category', '$price', $sellerID)";
 
         if ($mysqli->query($query) === TRUE) {
             $res = ["status" => "success", "message" => "Registration Successful..."];
@@ -163,6 +151,18 @@ function createProduct($data, $file)
         $mysqli->close();
     }
 
+    return json_encode($res);
+}
+
+function editProduct($data)
+{
+    global $mysqli;
+    $query = "UPDATE `products` SET `title_en` = '$data->title', `description_en` = '$data->description', `category` = '$data->category' WHERE id = $data->id";
+    $res = ["status" => "fail", "message" => "Unable to update product. Kindly try again..."];
+    if ($mysqli->query($query) === TRUE) {
+        $res = ["status" => "success", "message" => "Product Update Successful..."];
+    }
+    $mysqli->close();
     return json_encode($res);
 }
 

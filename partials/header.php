@@ -16,7 +16,6 @@ include_once "api/helper.php"
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="/assets/css/shop.css" />
   <script src="/assets/js/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -40,7 +39,7 @@ include_once "api/helper.php"
           <ul style="margin: auto 10px;">
             <li style="list-style: none">
               <!-- Button trigger modal -->
-              <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-size: 27px;padding: 5px 15px;margin: auto;margin-right: 10px;line-height: 1;" class="btn btn-light border shadow">
+              <button type="button" data-bs-toggle="modal" data-bs-target="#addAnimalModal" style="font-size: 27px;padding: 5px 15px;margin: auto;margin-right: 10px;line-height: 1;" class="btn btn-light border shadow">
                 +🐄
               </button>
             </li>

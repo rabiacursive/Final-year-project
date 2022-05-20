@@ -24,3 +24,12 @@ CREATE TABLE IF NOT EXISTS products (
     created_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
+
+
+
+
+
+
+-- beopari
+-- beopari1234
+-- git@github.com:rabiacursive/Final-year-project.git
