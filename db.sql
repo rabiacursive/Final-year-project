@@ -12,11 +12,13 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS products (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT NULL,
+    title_en VARCHAR(255) NOT NULL,
+    title_pk VARCHAR(255) NOT NULL,
+    description_en TEXT NULL,
     description_pk TEXT NULL,
     image TEXT NULL,
     status VARCHAR(100) NOT NULL,
+    category VARCHAR(200) NOT NULL,
     price VARCHAR(100) NOT NULL,
     sellerID INT(6) NOT NULL,
     created_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
